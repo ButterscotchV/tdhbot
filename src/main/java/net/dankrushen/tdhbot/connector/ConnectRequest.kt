@@ -1,9 +1,10 @@
 package net.dankrushen.tdhbot.connector
 
+import net.dankrushen.glovelib.database.keyvector.XdUser
 import org.joda.time.DateTime
 import org.joda.time.Duration
 
-class ConnectRequest(val accountConnector: AccountConnector, var discordId: String? = null, var steamId: String? = null, val requestKey: Int, var startTime: DateTime = DateTime.now(), var onExpire: Runnable? = null, var onConnect: Runnable? = null) {
+class ConnectRequest(val accountConnector: AccountConnector, var discordId: String? = null, var steamId: String? = null, val requestKey: Int, var startTime: DateTime = DateTime.now(), var onConnect: ((XdUser) -> Unit)? = null, var onExpire: (() -> Unit)? = null, var onError: ((String) -> Unit)? = null) {
 
     fun resetStartTime(startTime: DateTime = DateTime.now()) {
         this.startTime = startTime

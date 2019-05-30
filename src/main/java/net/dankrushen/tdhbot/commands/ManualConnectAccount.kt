@@ -17,11 +17,7 @@ class ManualConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
         this.guildOnly = true
 
         this.setCommand(2) { cmdEvent, args ->
-            val user = ThreadLocalStoreContainer.transactional(tdhBot.tdhDatabase.xodusStore) {
-                tdhBot.tdhDatabase.makeUserOrIfExistsReturnNull(args[0], args[1])
-            }
-
-            if (user != null)
+            if (ThreadLocalStoreContainer.transactional(tdhBot.tdhDatabase.xodusStore) { tdhBot.tdhDatabase.makeUserOrIfExistsReturnNull(args[0], args[1]) } != null)
                 cmdEvent.replySuccess("Manually connected Discord account to Steam account.")
             else
                 cmdEvent.replyError("Unable to manually connect Discord account to Steam account, it already exists in the database.")

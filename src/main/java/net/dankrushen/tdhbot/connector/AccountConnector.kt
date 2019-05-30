@@ -1,6 +1,7 @@
 package net.dankrushen.tdhbot.connector
 
 import kotlinx.dnq.store.container.ThreadLocalStoreContainer
+import net.dankrushen.glovelib.database.keyvector.XdUser
 import net.dankrushen.tdhbot.database.TDHDatabase
 import java.security.SecureRandom
 import kotlin.concurrent.thread
@@ -28,7 +29,7 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
 
                 if (request.isExpired(connectTimeout)) {
                     connectRequests.removeAt(i)
-                    request.onExpire?.run()
+                    request.onExpire?.invoke()
                 }
             }
         }
@@ -80,18 +81,18 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
         return num
     }
 
-    fun generateConnectRequest(discordId: String? = null, steamId: String? = null, numOfDigits: Int? = null, onExpire: Runnable? = null, onConnect: Runnable? = null): ConnectRequest? {
+    fun generateConnectRequest(discordId: String? = null, steamId: String? = null, numOfDigits: Int? = null, onConnect: ((XdUser) -> Unit)? = null, onExpire: (() -> Unit)? = null, onError: ((String) -> Unit)? = null): ConnectRequest? {
         if (ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore, readonly = true) { tdhDatabase.containsUserDiscordOrSteam(discordId, steamId) })
             return null
 
-        val connectRequest = ConnectRequest(this, discordId, steamId, generateConnectKey(numOfDigits), onExpire = onExpire, onConnect = onConnect)
+        val connectRequest = ConnectRequest(this, discordId, steamId, generateConnectKey(numOfDigits), onConnect = onConnect, onExpire = onExpire, onError = onError)
 
         connectRequests.add(connectRequest)
 
         return connectRequest
     }
 
-    fun completeConnection(connection: ConnectRequest) {
+    fun completeConnection(connection: ConnectRequest): XdUser? {
         if (!connection.isFilled())
             throw IllegalArgumentException("connection must be fully filled before being completed")
 
@@ -100,10 +101,15 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
         val discordId = connection.discordId ?: throw NullPointerException("connection has null discordId")
         val steamId = connection.steamId ?: throw NullPointerException("connection has null steamId")
 
-        ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore) {
-            tdhDatabase.makeUser(discordId, steamId)
+        return ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore) {
+            if (!tdhDatabase.containsUserDiscordOrSteam(discordId, steamId)) {
+                val xdUser = tdhDatabase.makeUser(discordId, steamId)
+                connection.onConnect?.invoke(xdUser)
+                xdUser
+            } else {
+                connection.onError?.invoke("Discord ID or Steam ID already exist within the database")
+                null
+            }
         }
-
-        connection.onConnect?.run()
     }
 }

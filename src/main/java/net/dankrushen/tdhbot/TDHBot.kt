@@ -42,8 +42,8 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
     constructor(token: String) {
         val builder = CommandClientBuilder()
 
-        builder.setPrefix("=")
-        builder.setAlternativePrefix(":")
+        builder.setPrefix(".")
+        builder.setAlternativePrefix(",")
 
         builder.addCommand(ConnectAccount(this))
         builder.addCommand(DisconnectAccount(this))
@@ -53,6 +53,7 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
         builder.addCommand(ManualDisconnectAccount(this))
 
         builder.addCommand(PrintArgs(this))
+        builder.addCommand(ListAccounts(this))
 
         builder.setEmojis(BotUtils.successEmoji, BotUtils.warningEmoji, BotUtils.errorEmoji)
 

@@ -7,6 +7,10 @@ import net.dankrushen.tdhbot.TDHBot
 
 abstract class BaseCommand(val tdhBot: TDHBot) : Command() {
 
+    companion object {
+        var errorNumber = 0
+    }
+
     private val commands = mutableMapOf<Int, (CommandEvent, Array<String>) -> Unit>()
 
     override fun execute(cmdEvent: CommandEvent) {
@@ -22,12 +26,15 @@ abstract class BaseCommand(val tdhBot: TDHBot) : Command() {
             } else {
                 cmdEvent.replyError("Incorrect number of arguments.")
             }
-
-            CommandUtils.removeReaction(cmdEvent, BotUtils.processingEmoji)
         } catch (e: Exception) {
+            val errorNumber = ++errorNumber
+
+            println("Error #$errorNumber")
             e.printStackTrace()
             cmdEvent.reactError()
-            cmdEvent.replyError("```\n${CommandUtils.exceptionToString(e)}\n```")
+            cmdEvent.replyError("Check logs for error #$errorNumber\n```\n${e.message}\n```")
+        } finally {
+            CommandUtils.removeReaction(cmdEvent, BotUtils.processingEmoji)
         }
     }
 

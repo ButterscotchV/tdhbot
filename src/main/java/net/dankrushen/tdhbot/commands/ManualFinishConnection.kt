@@ -25,8 +25,10 @@ class ManualFinishConnection(tdhBot: TDHBot) : BaseCommand(tdhBot) {
                         request.steamId = args[1]
 
                         if (request.isFilled()) {
-                            tdhBot.accountConnector.completeConnection(request)
-                            cmdEvent.replySuccess("Successfully connected accounts!")
+                            if (tdhBot.accountConnector.completeConnection(request) != null)
+                                cmdEvent.replySuccess("Successfully connected accounts!")
+                            else
+                                cmdEvent.replyError("These accounts are already connected, to re-connect these accounts, they must be disconnected first.")
                         } else {
                             cmdEvent.replyError("Something went wrong, please try entering this key in-game or generate a new connection key.")
                         }
