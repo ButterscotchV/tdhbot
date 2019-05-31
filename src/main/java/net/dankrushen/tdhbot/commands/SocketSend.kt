@@ -1,9 +1,6 @@
 package net.dankrushen.tdhbot.commands
 
-import com.google.common.graph.Network
 import net.dankrushen.tdhbot.TDHBot
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkMessage
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
 
 class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
