@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38902187-9421-4b86-af3a-cf2c91a309b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/Ping.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/SocketSend.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/Categories.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/Categories.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/ClientController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/ClientController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/IClientControllerListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/IClientControllerListener.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkMessage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkMessage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkRequest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkResponse.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/../../.gradle/" />
@@ -44,11 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="98" lean-forward="true" selection-start-line="98" selection-end-line="98" />
+            <state relative-caret-position="399">
+              <caret line="97" column="5" lean-forward="true" selection-start-line="97" selection-start-column="5" selection-end-line="97" selection-end-column="5" />
               <folding>
                 <element signature="e#31#906#0" expanded="true" />
               </folding>
@@ -56,14 +47,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/SocketSend.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="36" column="61" lean-forward="true" selection-start-line="36" selection-start-column="61" selection-end-line="36" selection-end-column="61" />
-              <folding>
-                <element signature="e#40#254#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="399">
+              <caret line="25" column="61" lean-forward="true" selection-start-line="25" selection-start-column="61" selection-end-line="25" selection-end-column="61" />
             </state>
           </provider>
         </entry>
@@ -71,11 +59,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/ClientController.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="23" column="47" lean-forward="true" selection-start-line="23" selection-start-column="47" selection-end-line="23" selection-end-column="47" />
+            <state relative-caret-position="122">
+              <caret line="23" column="47" selection-start-line="23" selection-start-column="47" selection-end-line="23" selection-end-column="47" />
               <folding>
                 <element signature="e#42#392#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/SocketController.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-298">
+              <caret line="24" column="56" selection-start-line="24" selection-start-column="56" selection-end-line="24" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -90,19 +87,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/IClientConnectListener.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/IClientControllerListener.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
               <folding>
                 <element signature="e#42#252#0" expanded="true" />
               </folding>
@@ -114,7 +102,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/INetworkResponseListener.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
-              <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+              <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -123,7 +111,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkResponse.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="187">
-              <caret line="11" column="39" lean-forward="true" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
+              <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -132,7 +120,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkRequest.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="57">
-              <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+              <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -141,7 +129,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkMessage.kt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
-              <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+              <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -208,13 +196,13 @@
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/DisconnectAccount.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/Categories.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/Ping.kt" />
-        <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/IClientControllerListener.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkRequest.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkResponse.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkMessage.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/ClientController.kt" />
         <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/SocketSend.kt" />
+        <option value="$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt" />
       </list>
     </option>
   </component>
@@ -421,18 +409,18 @@
       <workItem from="1559076015550" duration="56000" />
       <workItem from="1559076106527" duration="5583000" />
       <workItem from="1559099487221" duration="9876000" />
-      <workItem from="1559243532509" duration="30512000" />
+      <workItem from="1559243532509" duration="30918000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="90851000" />
+    <option name="totallyTimeSpent" value="91257000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="3" width="1296" height="1000" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20954692" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17590618" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -442,7 +430,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32936078" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.21568628" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.20260021" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -735,13 +723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/SocketController.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="24" column="56" selection-start-line="24" selection-start-column="56" selection-end-line="24" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/AdoptOpenJDK/jdk-12.0.1.12-openj9/lib/src.zip!/java.base/java/util/Scanner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="802">
@@ -801,7 +782,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/IClientControllerListener.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="e#42#252#0" expanded="true" />
           </folding>
@@ -818,57 +799,61 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkMessage.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+          <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkRequest.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
-          <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+          <caret line="5" column="25" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/NetworkResponse.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
-          <caret line="11" column="39" lean-forward="true" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
+          <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/networkmessage/INetworkResponseListener.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
-          <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/SocketSend.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="98" lean-forward="true" selection-start-line="98" selection-end-line="98" />
-          <folding>
-            <element signature="e#31#906#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="399">
+          <caret line="25" column="61" lean-forward="true" selection-start-line="25" selection-start-column="61" selection-end-line="25" selection-end-column="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/ClientController.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="23" column="47" lean-forward="true" selection-start-line="23" selection-start-column="47" selection-end-line="23" selection-end-column="47" />
+        <state relative-caret-position="122">
+          <caret line="23" column="47" selection-start-line="23" selection-start-column="47" selection-end-line="23" selection-end-column="47" />
           <folding>
             <element signature="e#42#392#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/commands/SocketSend.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/networking/SocketController.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="36" column="61" lean-forward="true" selection-start-line="36" selection-start-column="61" selection-end-line="36" selection-end-column="61" />
+        <state relative-caret-position="-298">
+          <caret line="24" column="56" selection-start-line="24" selection-start-column="56" selection-end-line="24" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/dankrushen/tdhbot/TDHBot.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="97" column="5" lean-forward="true" selection-start-line="97" selection-start-column="5" selection-end-line="97" selection-end-column="5" />
           <folding>
-            <element signature="e#40#254#0" expanded="true" />
+            <element signature="e#31#906#0" expanded="true" />
           </folding>
         </state>
       </provider>

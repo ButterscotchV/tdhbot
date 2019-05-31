@@ -100,7 +100,7 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
     override fun onClientRequest(controller: ClientController, request: NetworkRequest): NetworkResponse {
         println("Request (${request.id}): \"${request.content}\"")
 
-        return NetworkResponse(controller.generateMessage("Hello, world!"))
+        return NetworkResponse(request.id, "Hello, world!")
     }
 
     override fun onClientResponse(controller: ClientController, response: NetworkResponse) {
