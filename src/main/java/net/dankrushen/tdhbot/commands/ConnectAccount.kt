@@ -2,6 +2,7 @@ package net.dankrushen.tdhbot.commands
 
 import net.dankrushen.tdhbot.BotUtils
 import net.dankrushen.tdhbot.TDHBot
+import net.dankrushen.tdhbot.connector.ConnectRequest
 
 class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
@@ -25,12 +26,14 @@ class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
                 cmdEvent.replyWarning("You already have a pending connection request, check your DMs for the connection key\n" +
                         "Your key will expire in ${request.secondsToExpiration()} second(s)...")
             } else {
-                request = tdhBot.accountConnector.generateConnectRequest(
+                request = tdhBot.accountConnector.addConnectRequest( ConnectRequest(
+                        accountConnector = tdhBot.accountConnector,
                         discordId = cmdEvent.author.id,
+                        requestKey = tdhBot.accountConnector.generateConnectKey(),
                         onConnect = { cmdEvent.replyInDm("Your accounts have successfully been connected!") },
                         onExpire = { cmdEvent.replyInDm("Your connection key has expired...") },
                         onError = { error -> cmdEvent.replyInDm("${BotUtils.errorEmoji} Error while connecting accounts:\n```\n$error\n```") }
-                )
+                ))
 
                 if (request != null) {
                     cmdEvent.reply("Created connection request, check your DMs for the connection key\n" +

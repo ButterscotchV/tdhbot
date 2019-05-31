@@ -1,8 +1,10 @@
 package net.dankrushen.tdhbot.networking
 
+import net.dankrushen.tdhbot.BotUtils
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkMessage
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponse
+import net.dankrushen.tdhbot.networking.networkmessage.TimedNetworkRequest
 import java.io.OutputStream
 import java.net.Socket
 import java.util.*
@@ -15,6 +17,27 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
 
     private val reader: Scanner = Scanner(socket.getInputStream())
     private val writer: OutputStream = socket.getOutputStream()
+
+    private val requests = mutableListOf<TimedNetworkRequest>()
+
+    val requestTimer = thread {
+        while (!Thread.interrupted()) {
+            try {
+                Thread.sleep(BotUtils.requestCheckSpeedMillis)
+            } catch (e: InterruptedException) {
+                // Ignore interrupt error
+            }
+
+            for (i in requests.size - 1 downTo 0) {
+                val request = requests[i]
+
+                if (request.isExpired(BotUtils.requestTimeout)) {
+                    requests.removeAt(i)
+                    request.onExpire?.invoke()
+                }
+            }
+        }
+    }
 
     private var networkId = 0
 
@@ -79,6 +102,7 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
 
     fun close() {
         clientThread.interrupt()
+        requestTimer.interrupt()
         socket.close()
         listenerExecutor.shutdown()
     }
@@ -93,5 +117,28 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
 
     fun sendMessage(message: NetworkMessage) {
         write(message.toString())
+    }
+
+    fun sendRequest(request: TimedNetworkRequest) {
+        requests.add(request)
+
+        sendMessage(request.request)
+    }
+
+    fun getRequest(id: String): TimedNetworkRequest? {
+        for (request in requests) {
+            if (request.request.id == id)
+                return request
+        }
+
+        return null
+    }
+
+    fun completeRequest(request: TimedNetworkRequest, response: NetworkResponse) {
+        requests.remove(request)
+
+        request.onSuccess?.invoke(response)
+
+        request.request.executeListeners(response)
     }
 }

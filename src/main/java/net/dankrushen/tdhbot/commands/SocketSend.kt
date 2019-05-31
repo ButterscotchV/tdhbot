@@ -1,6 +1,8 @@
 package net.dankrushen.tdhbot.commands
 
 import net.dankrushen.tdhbot.TDHBot
+import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
+import net.dankrushen.tdhbot.networking.networkmessage.TimedNetworkRequest
 
 class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
@@ -28,10 +30,10 @@ class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
         this.setCommand(1) { cmdEvent, args ->
             for (client in tdhBot.clients) {
-                client.sendMessage(client.generateMessage(args.joinToString(" ")))
+                client.sendRequest(TimedNetworkRequest(NetworkRequest(client.generateMessage(args.joinToString(" "))), onSuccess = { response -> cmdEvent.reply("Response: ${response.content}")}))
             }
 
-            cmdEvent.replySuccess("Sent message to clients!")
+            cmdEvent.replySuccess("Sent request to clients!")
         }
     }
 }

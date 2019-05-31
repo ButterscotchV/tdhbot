@@ -10,4 +10,7 @@ object BotUtils {
     const val successEmoji = "✅"
     const val warningEmoji = "⚠"
     const val errorEmoji = "❌"
+
+    var requestTimeout: Long = 5000
+    var requestCheckSpeedMillis: Long = 1000
 }

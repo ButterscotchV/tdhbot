@@ -11,7 +11,7 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
     val secureRandom = SecureRandom()
     var numOfDigits = 5
 
-    var connectTimeout = 120L
+    var connectTimeout: Long = 120
     val connectRequests = mutableListOf<ConnectRequest>()
 
     var checkSpeedMillis: Long = 1000
@@ -81,11 +81,9 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
         return num
     }
 
-    fun generateConnectRequest(discordId: String? = null, steamId: String? = null, numOfDigits: Int? = null, onConnect: ((XdUser) -> Unit)? = null, onExpire: (() -> Unit)? = null, onError: ((String) -> Unit)? = null): ConnectRequest? {
-        if (ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore, readonly = true) { tdhDatabase.containsUserDiscordOrSteam(discordId, steamId) })
+    fun addConnectRequest(connectRequest: ConnectRequest): ConnectRequest? {
+        if (ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore, readonly = true) { tdhDatabase.containsUserDiscordOrSteam(connectRequest.discordId, connectRequest.steamId) })
             return null
-
-        val connectRequest = ConnectRequest(this, discordId, steamId, generateConnectKey(numOfDigits), onConnect = onConnect, onExpire = onExpire, onError = onError)
 
         connectRequests.add(connectRequest)
 

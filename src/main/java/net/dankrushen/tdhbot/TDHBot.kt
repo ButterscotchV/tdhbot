@@ -105,5 +105,11 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
 
     override fun onClientResponse(controller: ClientController, response: NetworkResponse) {
         println("Response (${response.id}): \"${response.content}\"")
+
+        val request = controller.getRequest(response.id)
+
+        if (request != null) {
+            controller.completeRequest(request, response)
+        }
     }
 }
