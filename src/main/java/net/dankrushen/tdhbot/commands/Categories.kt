@@ -7,6 +7,8 @@ import net.dv8tion.jda.core.Permission
 object Categories {
     const val noPermissionError = "${BotUtils.errorEmoji} You do not have the required permission(s) to run this command."
 
+    val general = Command.Category("General")
+
     val accountManagement = Command.Category("Account Management")
 
     val admin = Command.Category("Administrator Commands", noPermissionError) { cmdEvent ->

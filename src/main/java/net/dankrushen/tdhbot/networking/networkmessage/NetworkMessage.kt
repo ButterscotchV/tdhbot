@@ -8,9 +8,6 @@ open class NetworkMessage(val id: String, val content: String) {
     }
 
     override fun toString(): String {
-        if (content.isBlank())
-            return id
-
         return "$id:$content"
     }
 }

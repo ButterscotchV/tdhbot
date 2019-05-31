@@ -45,6 +45,8 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
         builder.setPrefix(".")
         builder.setAlternativePrefix(",")
 
+        builder.addCommand(Ping(this))
+
         builder.addCommand(ConnectAccount(this))
         builder.addCommand(DisconnectAccount(this))
 
@@ -54,6 +56,7 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
 
         builder.addCommand(PrintArgs(this))
         builder.addCommand(ListAccounts(this))
+        builder.addCommand(SocketSend(this))
 
         builder.setEmojis(BotUtils.successEmoji, BotUtils.warningEmoji, BotUtils.errorEmoji)
 
@@ -91,14 +94,16 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
     }
 
     override fun onClientMessage(controller: ClientController, message: NetworkMessage) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("Message (${message.id}): \"${message.content}\"")
     }
 
     override fun onClientRequest(controller: ClientController, request: NetworkRequest): NetworkResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("Request (${request.id}): \"${request.content}\"")
+
+        return NetworkResponse(controller.generateMessage("Hello, world!"))
     }
 
     override fun onClientResponse(controller: ClientController, response: NetworkResponse) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("Response (${response.id}): \"${response.content}\"")
     }
 }

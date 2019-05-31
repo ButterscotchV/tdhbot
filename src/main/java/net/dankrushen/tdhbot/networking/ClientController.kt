@@ -16,6 +16,8 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
     private val reader: Scanner = Scanner(socket.getInputStream())
     private val writer: OutputStream = socket.getOutputStream()
 
+    private var networkId = 0
+
     private var clientThread = thread {
         while (!Thread.interrupted() && socket.isConnected) {
             try {
@@ -48,10 +50,8 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
                         continue
                     }
 
-                    val request = NetworkRequest(id.substring(1), content)
-
                     listenerExecutor.submit {
-                        sendResponse(requestListener.onClientRequest(this, request))
+                        sendMessage(requestListener.onClientRequest(this, NetworkRequest(id.substring(1), content)))
                     }
                 } else if (id[0] == NetworkResponse.indicator) {
                     if (id.length <= 1) {
@@ -59,16 +59,12 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
                         continue
                     }
 
-                    val response = NetworkResponse(id.substring(1), content)
-
                     listenerExecutor.submit {
-                        requestListener.onClientResponse(this, response)
+                        requestListener.onClientResponse(this, NetworkResponse(id.substring(1), content))
                     }
                 } else {
-                    val message = NetworkMessage(id, content)
-
                     listenerExecutor.submit {
-                        requestListener.onClientMessage(this, message)
+                        requestListener.onClientMessage(this, NetworkMessage(id, content))
                     }
                 }
             } catch (noSuchElementException: NoSuchElementException) {
@@ -81,25 +77,21 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
         }
     }
 
-    fun write(message: String) {
-        writer.write(("$message\n").toByteArray())
-    }
-
-    fun sendMessage(message: NetworkMessage) {
-        write(message.toString())
-    }
-
-    fun sendRequest(request: NetworkRequest) {
-        write(request.toString())
-    }
-
-    fun sendResponse(response: NetworkResponse) {
-        write(response.toString())
-    }
-
     fun close() {
         clientThread.interrupt()
         socket.close()
         listenerExecutor.shutdown()
+    }
+
+    fun write(message: String) {
+        writer.write(("$message\n").toByteArray())
+    }
+
+    fun generateMessage(content: String): NetworkMessage {
+        return NetworkMessage(networkId++.toString(), content)
+    }
+
+    fun sendMessage(message: NetworkMessage) {
+        write(message.toString())
     }
 }
