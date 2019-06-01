@@ -1,6 +1,6 @@
 package net.dankrushen.tdhbot.connector
 
-import net.dankrushen.glovelib.database.keyvector.XdUser
+import net.dankrushen.tdhbot.database.user.XdUser
 
 class ConnectRequest(var discordId: String? = null, var steamId: String? = null, val requestKey: Int) {
 

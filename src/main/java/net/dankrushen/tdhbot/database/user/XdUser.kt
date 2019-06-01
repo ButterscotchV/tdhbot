@@ -1,4 +1,4 @@
-package net.dankrushen.glovelib.database.keyvector
+package net.dankrushen.tdhbot.database.user
 
 import jetbrains.exodus.entitystore.Entity
 import kotlinx.dnq.XdEntity

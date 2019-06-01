@@ -6,7 +6,7 @@ import kotlinx.dnq.query.*
 import kotlinx.dnq.store.container.ThreadLocalStoreContainer
 import kotlinx.dnq.store.container.createTransientEntityStore
 import kotlinx.dnq.util.initMetaData
-import net.dankrushen.glovelib.database.keyvector.XdUser
+import net.dankrushen.tdhbot.database.user.XdUser
 import java.nio.file.Path
 
 class TDHDatabase {

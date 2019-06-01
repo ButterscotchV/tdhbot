@@ -50,7 +50,7 @@ object CommandUtils {
             return emptyArray()
 
         val args = mutableListOf<String>()
-        var strBuilder = StringBuilder()
+        val strBuilder = StringBuilder()
         var inQuotes = false
         var escaped = false
 
