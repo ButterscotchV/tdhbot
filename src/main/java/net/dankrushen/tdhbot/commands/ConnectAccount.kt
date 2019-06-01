@@ -20,24 +20,25 @@ class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
         this.guildOnly = false
 
         this.setCommand { cmdEvent, args ->
+            val requestTime = DateTime.now()
             var request = tdhBot.accountConnector.getRequest(cmdEvent.author.id)
 
             if (request != null) {
-                request.startDateTime = DateTime.now()
+                request.startDateTime = requestTime
 
                 cmdEvent.replyWarning("You already have a pending connection request, check your DMs for the connection key\n" +
-                        "Your key will expire in ${request.timeToExpiration()} second(s)...")
+                        "Your key will expire in ${request.getTimeToExpiration(requestTime)} second(s)...")
             } else {
                 request = tdhBot.accountConnector.addConnectRequest(TimedObject(
                         ConnectRequest(discordId = cmdEvent.author.id, requestKey = tdhBot.accountConnector.generateConnectKey()),
-                        BotUtils.connectRequestTimeout, BotUtils.connectRequestTimeoutUnit,
+                        BotUtils.connectRequestTimeout, BotUtils.connectRequestTimeoutUnit, requestTime,
                         onFinish = { result -> if (result.obj.returnedUser == null) cmdEvent.replyError("Your accounts are already connected, to re-connect your accounts, you must disconnect them first.") else cmdEvent.replyInDm("Your accounts have successfully been connected!") },
                         onExpire = { cmdEvent.replyInDm("Your account connection key has expired...") }
                 ))
 
                 if (request != null) {
                     cmdEvent.reply("Created connection request, check your DMs for the connection key\n" +
-                            "Your key will expire in ${request.timeToExpiration()} second(s)...")
+                            "Your key will expire in ${request.getTimeToExpiration(requestTime)} second(s)...")
                 } else {
                     cmdEvent.replyError("Your accounts are already connected, to re-connect your accounts, you must disconnect them first.")
                 }

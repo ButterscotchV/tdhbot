@@ -2,8 +2,8 @@ package net.dankrushen.tdhbot.commands
 
 import kotlinx.dnq.query.iterator
 import kotlinx.dnq.store.container.ThreadLocalStoreContainer
-import net.dankrushen.tdhbot.database.user.XdUser
 import net.dankrushen.tdhbot.TDHBot
+import net.dankrushen.tdhbot.database.user.XdUser
 
 class ListAccounts(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 

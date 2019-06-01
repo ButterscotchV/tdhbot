@@ -3,11 +3,13 @@ package net.dankrushen.tdhbot.networking
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkMessage
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponse
+import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponseFuture
 import net.dankrushen.tdhbot.timedobject.TimedObject
 import net.dankrushen.tdhbot.timedobject.TimedObjectManager
 import java.io.OutputStream
 import java.net.Socket
 import java.util.*
+import java.util.concurrent.CancellationException
 import java.util.concurrent.Executors
 import kotlin.concurrent.thread
 
@@ -105,6 +107,23 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
         sendMessage(request.obj)
     }
 
+    fun sendRequestWaitable(request: TimedObject<NetworkRequest>): NetworkResponseFuture {
+        val future = NetworkResponseFuture()
+        request.obj.addResponseListener(future)
+
+        sendRequest(request)
+
+        return future
+    }
+
+    fun sendRequestBlocking(request: TimedObject<NetworkRequest>): NetworkResponse? {
+        return try {
+            sendRequestWaitable(request).get()
+        } catch (cancelledException: CancellationException) {
+            null
+        }
+    }
+
     fun getRequest(id: String): TimedObject<NetworkRequest>? {
         for (request in timedRequestManager.timedObjects) {
             if (request.obj.id == id)
@@ -117,6 +136,6 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
     fun completeRequest(request: TimedObject<NetworkRequest>, response: NetworkResponse) {
         timedRequestManager.finishTimedObject(request)
 
-        request.obj.executeListeners(response)
+        request.obj.executeResponseHandler(response)
     }
 }

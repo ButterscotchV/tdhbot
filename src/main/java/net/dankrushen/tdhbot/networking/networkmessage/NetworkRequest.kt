@@ -31,7 +31,7 @@ class NetworkRequest(id: String, content: String, responseListener: INetworkResp
         responseListeners.clear()
     }
 
-    fun executeListeners(response: NetworkResponse) {
+    fun executeResponseHandler(response: NetworkResponse) {
         for (responseListener in responseListeners) {
             responseListener.onNetworkResponse(this, response)
         }

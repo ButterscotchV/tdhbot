@@ -7,13 +7,7 @@ class TimedObject<T>(val obj: T, timeout: Long, timeoutUnit: TimeUnit, startDate
     var timeoutUnit = timeoutUnit
         set(value) {
             field = value
-            internalTimeout = value.toMillis(timeout)
-        }
-
-    private var internalTimeout: Long = timeoutUnit.toMillis(timeout)
-        set(value) {
-            field = value
-            internalExpirationDateTime = startDateTime + value
+            timeoutMillis = value.toMillis(timeout)
         }
 
     var timeout: Long = timeout
@@ -22,27 +16,35 @@ class TimedObject<T>(val obj: T, timeout: Long, timeoutUnit: TimeUnit, startDate
                 throw IllegalArgumentException("${::timeout.name} must not be less than 0")
 
             field = value
-            internalTimeout = timeoutUnit.toMillis(value)
+            timeoutMillis = timeoutUnit.toMillis(value)
         }
 
-    val timeoutMillis: Long
-        get() = internalTimeout
+    var timeoutMillis: Long = timeoutUnit.toMillis(timeout)
+        private set(value) {
+            field = value
+            expirationDateTime = startDateTime + value
+        }
 
     var startDateTime = startDateTime
         set(value) {
             field = value
-            internalExpirationDateTime = value + internalTimeout
+            expirationDateTime = value + timeoutMillis
         }
 
-    private var internalExpirationDateTime: DateTime = DateTime()
-    val expirationDateTime: DateTime
-        get() = internalExpirationDateTime
+    var expirationDateTime: DateTime = startDateTime + timeoutMillis
+        private set(value) {
+            field = value
+        }
 
-    fun timeToExpiration(dateTime: DateTime = DateTime.now(), timeUnit: TimeUnit = TimeUnit.SECONDS): Long {
-        return timeUnit.convert(dateTime.millis - expirationDateTime.millis, TimeUnit.MILLISECONDS)
+    fun getTimeoutTime(timeUnit: TimeUnit = TimeUnit.SECONDS): Long {
+        return timeUnit.convert(timeoutMillis, TimeUnit.MILLISECONDS)
+    }
+
+    fun getTimeToExpiration(dateTime: DateTime = DateTime.now(), timeUnit: TimeUnit = TimeUnit.SECONDS): Long {
+        return timeUnit.convert(expirationDateTime.millis - dateTime.millis, TimeUnit.MILLISECONDS)
     }
 
     fun isExpired(dateTime: DateTime = DateTime.now()): Boolean {
-        return dateTime.millis - expirationDateTime.millis <= 0
+        return expirationDateTime.millis - dateTime.millis <= 0
     }
 }

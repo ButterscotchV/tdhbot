@@ -1,8 +1,8 @@
 package net.dankrushen.tdhbot.connector
 
 import kotlinx.dnq.store.container.ThreadLocalStoreContainer
-import net.dankrushen.tdhbot.database.user.XdUser
 import net.dankrushen.tdhbot.database.TDHDatabase
+import net.dankrushen.tdhbot.database.user.XdUser
 import net.dankrushen.tdhbot.timedobject.TimedObject
 import net.dankrushen.tdhbot.timedobject.TimedObjectManager
 import java.security.SecureRandom
