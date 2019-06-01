@@ -26,7 +26,7 @@ class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
                 cmdEvent.replyWarning("You already have a pending connection request, check your DMs for the connection key\n" +
                         "Your key will expire in ${request.secondsToExpiration()} second(s)...")
             } else {
-                request = tdhBot.accountConnector.addConnectRequest( ConnectRequest(
+                request = tdhBot.accountConnector.addConnectRequest(ConnectRequest(
                         accountConnector = tdhBot.accountConnector,
                         discordId = cmdEvent.author.id,
                         requestKey = tdhBot.accountConnector.generateConnectKey(),

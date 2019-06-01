@@ -30,7 +30,7 @@ class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
         this.setCommand(1) { cmdEvent, args ->
             for (client in tdhBot.clients) {
-                client.sendRequest(TimedNetworkRequest(NetworkRequest(client.generateMessage(args.joinToString(" "))), onSuccess = { response -> cmdEvent.reply("Response: ${response.content}")}))
+                client.sendRequest(TimedNetworkRequest(NetworkRequest(client.generateMessage(args.joinToString(" "))), onSuccess = { response -> cmdEvent.reply("Response: ${response.content}") }, onExpire = { cmdEvent.replyError("Network request timed out!") }))
             }
 
             cmdEvent.replySuccess("Sent request to clients!")
