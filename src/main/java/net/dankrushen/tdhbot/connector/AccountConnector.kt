@@ -3,45 +3,20 @@ package net.dankrushen.tdhbot.connector
 import kotlinx.dnq.store.container.ThreadLocalStoreContainer
 import net.dankrushen.glovelib.database.keyvector.XdUser
 import net.dankrushen.tdhbot.database.TDHDatabase
+import net.dankrushen.tdhbot.timedobject.TimedObject
+import net.dankrushen.tdhbot.timedobject.TimedObjectManager
 import java.security.SecureRandom
-import kotlin.concurrent.thread
 
 class AccountConnector(val tdhDatabase: TDHDatabase) {
 
     val secureRandom = SecureRandom()
     var numOfDigits = 5
 
-    var connectTimeout: Long = 120
-    val connectRequests = mutableListOf<ConnectRequest>()
+    val timedRequestManager = TimedObjectManager<ConnectRequest>()
 
-    var checkSpeedMillis: Long = 1000
-
-    val connectorTimer = thread {
-        while (!Thread.interrupted()) {
-            try {
-                Thread.sleep(checkSpeedMillis)
-            } catch (e: InterruptedException) {
-                // Ignore interrupt error
-            }
-
-            for (i in connectRequests.size - 1 downTo 0) {
-                val request = connectRequests[i]
-
-                if (request.isExpired(connectTimeout)) {
-                    connectRequests.removeAt(i)
-                    request.onExpire?.invoke()
-                }
-            }
-        }
-    }
-
-    fun shutdown() {
-        connectorTimer.interrupt()
-    }
-
-    fun getRequest(connectKey: Int): ConnectRequest? {
-        for (request in connectRequests) {
-            if (request.requestKey == connectKey)
+    fun getRequest(connectKey: Int): TimedObject<ConnectRequest>? {
+        for (request in timedRequestManager.timedObjects) {
+            if (request.obj.requestKey == connectKey)
                 return request
         }
 
@@ -52,13 +27,13 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
         return getRequest(connectKey) != null
     }
 
-    fun getRequest(discordId: String? = null, steamId: String? = null): ConnectRequest? {
-        for (request in connectRequests) {
-            if (request.discordId == discordId && request.steamId == steamId)
+    fun getRequest(discordId: String? = null, steamId: String? = null): TimedObject<ConnectRequest>? {
+        for (request in timedRequestManager.timedObjects) {
+            if (request.obj.discordId == discordId && request.obj.steamId == steamId)
                 return request
-            else if (request.discordId == discordId && steamId.isNullOrBlank())
+            else if (request.obj.discordId == discordId && steamId.isNullOrBlank())
                 return request
-            else if (discordId.isNullOrBlank() && request.steamId == steamId)
+            else if (discordId.isNullOrBlank() && request.obj.steamId == steamId)
                 return request
         }
 
@@ -81,31 +56,35 @@ class AccountConnector(val tdhDatabase: TDHDatabase) {
         return num
     }
 
-    fun addConnectRequest(connectRequest: ConnectRequest): ConnectRequest? {
-        if (ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore, readonly = true) { tdhDatabase.containsUserDiscordOrSteam(connectRequest.discordId, connectRequest.steamId) })
+    fun addConnectRequest(connectRequest: TimedObject<ConnectRequest>): TimedObject<ConnectRequest>? {
+        if (ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore, readonly = true) { tdhDatabase.containsUserDiscordOrSteam(connectRequest.obj.discordId, connectRequest.obj.steamId) })
             return null
 
-        connectRequests.add(connectRequest)
+        timedRequestManager.timedObjects += connectRequest
 
         return connectRequest
     }
 
-    fun completeConnection(connection: ConnectRequest): XdUser? {
-        if (!connection.isFilled())
-            throw IllegalArgumentException("connection must be fully filled before being completed")
+    fun completeConnection(request: TimedObject<ConnectRequest>): XdUser? {
+        if (!request.obj.isFilled())
+            throw IllegalArgumentException("request must be fully filled before being completed")
 
-        connectRequests.remove(connection)
+        timedRequestManager.finishTimedObject(request, false)
 
-        val discordId = connection.discordId ?: throw NullPointerException("connection has null discordId")
-        val steamId = connection.steamId ?: throw NullPointerException("connection has null steamId")
+        val discordId = request.obj.discordId ?: throw NullPointerException("request has null discordId")
+        val steamId = request.obj.steamId ?: throw NullPointerException("request has null steamId")
 
         return ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore) {
             if (!tdhDatabase.containsUserDiscordOrSteam(discordId, steamId)) {
                 val xdUser = tdhDatabase.makeUser(discordId, steamId)
-                connection.onConnect?.invoke(xdUser)
+
+                request.obj.returnedUser = xdUser
+                request.onFinish?.invoke(request)
+
                 xdUser
             } else {
-                connection.onError?.invoke("Discord ID or Steam ID already exist within the database")
+                request.onFinish?.invoke(request)
+
                 null
             }
         }

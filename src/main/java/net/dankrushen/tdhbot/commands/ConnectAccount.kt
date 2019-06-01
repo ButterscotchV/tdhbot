@@ -3,6 +3,8 @@ package net.dankrushen.tdhbot.commands
 import net.dankrushen.tdhbot.BotUtils
 import net.dankrushen.tdhbot.TDHBot
 import net.dankrushen.tdhbot.connector.ConnectRequest
+import net.dankrushen.tdhbot.timedobject.TimedObject
+import org.joda.time.DateTime
 
 class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
@@ -21,30 +23,28 @@ class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
             var request = tdhBot.accountConnector.getRequest(cmdEvent.author.id)
 
             if (request != null) {
-                request.resetStartTime()
+                request.startDateTime = DateTime.now()
 
                 cmdEvent.replyWarning("You already have a pending connection request, check your DMs for the connection key\n" +
-                        "Your key will expire in ${request.secondsToExpiration()} second(s)...")
+                        "Your key will expire in ${request.timeToExpiration()} second(s)...")
             } else {
-                request = tdhBot.accountConnector.addConnectRequest(ConnectRequest(
-                        accountConnector = tdhBot.accountConnector,
-                        discordId = cmdEvent.author.id,
-                        requestKey = tdhBot.accountConnector.generateConnectKey(),
-                        onConnect = { cmdEvent.replyInDm("Your accounts have successfully been connected!") },
-                        onExpire = { cmdEvent.replyInDm("Your connection key has expired...") },
-                        onError = { error -> cmdEvent.replyInDm("${BotUtils.errorEmoji} Error while connecting accounts:\n```\n$error\n```") }
+                request = tdhBot.accountConnector.addConnectRequest(TimedObject(
+                        ConnectRequest(discordId = cmdEvent.author.id, requestKey = tdhBot.accountConnector.generateConnectKey()),
+                        BotUtils.connectRequestTimeout, BotUtils.connectRequestTimeoutUnit,
+                        onFinish = { result -> if (result.obj.returnedUser == null) cmdEvent.replyError("Your accounts are already connected, to re-connect your accounts, you must disconnect them first.") else cmdEvent.replyInDm("Your accounts have successfully been connected!") },
+                        onExpire = { cmdEvent.replyInDm("Your account connection key has expired...") }
                 ))
 
                 if (request != null) {
                     cmdEvent.reply("Created connection request, check your DMs for the connection key\n" +
-                            "Your key will expire in ${request.secondsToExpiration()} second(s)...")
+                            "Your key will expire in ${request.timeToExpiration()} second(s)...")
                 } else {
                     cmdEvent.replyError("Your accounts are already connected, to re-connect your accounts, you must disconnect them first.")
                 }
             }
 
             if (request != null)
-                cmdEvent.replyInDm("Your connection key is `${request.requestKey}`.")
+                cmdEvent.replyInDm("Your connection key is `${request.obj.requestKey}`.")
         }
 
         this.setCommand(1) { cmdEvent, args ->
@@ -53,10 +53,10 @@ class ConnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
                 val request = tdhBot.accountConnector.getRequest(connectKey)
 
                 if (request != null) {
-                    if (request.discordId.isNullOrBlank()) {
-                        request.discordId = cmdEvent.author.id
+                    if (request.obj.discordId.isNullOrBlank()) {
+                        request.obj.discordId = cmdEvent.author.id
 
-                        if (request.isFilled()) {
+                        if (request.obj.isFilled()) {
                             tdhBot.accountConnector.completeConnection(request)
                             cmdEvent.replySuccess("Your accounts have successfully been connected!")
                         } else {

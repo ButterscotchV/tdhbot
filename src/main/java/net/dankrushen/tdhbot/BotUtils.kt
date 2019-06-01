@@ -1,6 +1,7 @@
 package net.dankrushen.tdhbot
 
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 object BotUtils {
     val tokenFile = File("token.txt")
@@ -11,6 +12,9 @@ object BotUtils {
     const val warningEmoji = "⚠"
     const val errorEmoji = "❌"
 
-    var requestTimeout: Long = 5000
-    var requestCheckSpeedMillis: Long = 1000
+    var connectRequestTimeout: Long = 2
+    var connectRequestTimeoutUnit: TimeUnit = TimeUnit.MINUTES
+
+    var networkRequestTimeout: Long = 10
+    var networkRequestTimeoutUnit: TimeUnit = TimeUnit.SECONDS
 }

@@ -1,6 +1,7 @@
 package net.dankrushen.tdhbot.timedobject
 
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit.SECONDS) {
 
@@ -10,7 +11,7 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
             internalCheckDelay = value.toMillis(checkDelay)
         }
 
-    private var internalCheckDelay: Long = -1
+    private var internalCheckDelay: Long = checkUnit.toMillis(checkDelay)
     var checkDelay: Long = checkDelay
         set(value) {
             if (value < 0)
@@ -22,7 +23,7 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
 
     val timedObjects = mutableListOf<TimedObject<T>>()
 
-    val checkThread = Thread {
+    val checkThread = thread {
         while (!Thread.interrupted()) {
             try {
                 Thread.sleep(internalCheckDelay)
@@ -50,15 +51,12 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
         checkThread.interrupt()
     }
 
-    fun finishTimedObject(timedObject: TimedObject<T>): T? {
-        return if (timedObject.finishedCheck?.invoke(timedObject) != false) {
-            timedObjects.remove(timedObject)
+    fun finishTimedObject(timedObject: TimedObject<T>, executeOnFinish: Boolean = true): TimedObject<T> {
+        timedObjects.remove(timedObject)
 
+        if (executeOnFinish)
             timedObject.onFinish?.invoke(timedObject)
 
-            timedObject.obj
-        } else {
-            null
-        }
+        return timedObject
     }
 }

@@ -3,14 +3,14 @@ package net.dankrushen.tdhbot.timedobject
 import org.joda.time.DateTime
 import java.util.concurrent.TimeUnit
 
-class TimedObject<T>(val obj: T, timeout: Long, timeoutUnit: TimeUnit, startDateTime: DateTime = DateTime.now(), var finishedCheck: ((TimedObject<T>) -> Boolean)? = null, var onFinish: ((TimedObject<T>) -> Unit)? = null, var onExpire: ((TimedObject<T>) -> Unit)? = null) {
+class TimedObject<T>(val obj: T, timeout: Long, timeoutUnit: TimeUnit, startDateTime: DateTime = DateTime.now(), var onFinish: ((TimedObject<T>) -> Unit)? = null, var onExpire: ((TimedObject<T>) -> Unit)? = null) {
     var timeoutUnit = timeoutUnit
         set(value) {
             field = value
             internalTimeout = value.toMillis(timeout)
         }
 
-    private var internalTimeout: Long = -1
+    private var internalTimeout: Long = timeoutUnit.toMillis(timeout)
         set(value) {
             field = value
             internalExpirationDateTime = startDateTime + value

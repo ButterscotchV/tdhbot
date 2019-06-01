@@ -21,10 +21,10 @@ class ManualFinishConnection(tdhBot: TDHBot) : BaseCommand(tdhBot) {
                 val request = tdhBot.accountConnector.getRequest(connectKey)
 
                 if (request != null) {
-                    if (request.steamId.isNullOrBlank()) {
-                        request.steamId = args[1]
+                    if (request.obj.steamId.isNullOrBlank()) {
+                        request.obj.steamId = args[1]
 
-                        if (request.isFilled()) {
+                        if (request.obj.isFilled()) {
                             if (tdhBot.accountConnector.completeConnection(request) != null)
                                 cmdEvent.replySuccess("Successfully connected accounts!")
                             else

@@ -1,8 +1,9 @@
 package net.dankrushen.tdhbot.commands
 
+import net.dankrushen.tdhbot.BotUtils
 import net.dankrushen.tdhbot.TDHBot
 import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
-import net.dankrushen.tdhbot.networking.networkmessage.TimedNetworkRequest
+import net.dankrushen.tdhbot.timedobject.TimedObject
 
 class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
@@ -30,7 +31,7 @@ class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
         this.setCommand(1) { cmdEvent, args ->
             for (client in tdhBot.clients) {
-                client.sendRequest(TimedNetworkRequest(NetworkRequest(client.generateMessage(args.joinToString(" "))), onSuccess = { response -> cmdEvent.reply("Response: ${response.content}") }, onExpire = { cmdEvent.replyError("Network request timed out!") }))
+                client.sendRequest(TimedObject(NetworkRequest(client.generateMessage(args.joinToString(" "))), BotUtils.networkRequestTimeout, BotUtils.networkRequestTimeoutUnit, onFinish = { response -> cmdEvent.reply("Response: ${response.obj.content}") }, onExpire = { cmdEvent.replyError("Network request timed out!") }))
             }
 
             cmdEvent.replySuccess("Sent request to clients!")
