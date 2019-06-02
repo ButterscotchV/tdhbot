@@ -31,14 +31,16 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
                 // Ignore interrupt error
             }
 
-            for (i in timedObjects.size - 1 downTo 0) {
-                val timedObject = timedObjects[i]
+            synchronized(timedObjects) {
+                for (i in timedObjects.size - 1 downTo 0) {
+                    val timedObject = timedObjects[i]
 
-                synchronized(timedObject) {
-                    if (timedObject.isExpired()) {
-                        timedObjects.removeAt(i)
+                    synchronized(timedObject) {
+                        if (timedObject.isExpired()) {
+                            timedObjects.removeAt(i)
 
-                        timedObject.onExpire?.invoke(timedObject)
+                            timedObject.onExpire?.invoke(timedObject)
+                        }
                     }
                 }
             }
@@ -53,9 +55,14 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
         checkThread.interrupt()
     }
 
-    fun finishTimedObject(timedObject: TimedObject<T>, executeOnFinish: Boolean = true): TimedObject<T> {
+    fun finishTimedObject(timedObject: TimedObject<T>, executeOnFinish: Boolean = true): TimedObject<T>? {
         synchronized(timedObject) {
-            timedObjects.remove(timedObject)
+            synchronized(timedObjects) {
+                if (!timedObjects.contains(timedObject))
+                    return null
+
+                timedObjects.remove(timedObject)
+            }
 
             if (executeOnFinish)
                 timedObject.onFinish?.invoke(timedObject)

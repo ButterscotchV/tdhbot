@@ -1,10 +1,6 @@
-package net.dankrushen.tdhbot.networking.networkmessage
+package net.dankrushen.tdhbot.networking.networkmessages
 
-class NetworkRequest(id: String, content: String, responseListener: INetworkResponseListener? = null) : NetworkMessage(id, content) {
-
-    companion object {
-        const val indicator = 'Q'
-    }
+class NetworkRequest(id: Int, content: String, responseListener: INetworkResponseListener? = null) : NetworkMessage(id, content) {
 
     constructor(networkMessage: NetworkMessage, responseListener: INetworkResponseListener? = null) : this(networkMessage.id, networkMessage.content, responseListener)
 
@@ -13,11 +9,9 @@ class NetworkRequest(id: String, content: String, responseListener: INetworkResp
             addResponseListener(responseListener)
     }
 
-    private val responseListeners = mutableListOf<INetworkResponseListener>()
+    override val messageType = NetworkMessageType.REQUEST
 
-    override fun toString(): String {
-        return "$indicator$id:$content"
-    }
+    private val responseListeners = mutableListOf<INetworkResponseListener>()
 
     fun addResponseListener(responseListener: INetworkResponseListener) {
         responseListeners.add(responseListener)

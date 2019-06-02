@@ -2,7 +2,7 @@ package net.dankrushen.tdhbot.commands
 
 import net.dankrushen.tdhbot.BotUtils
 import net.dankrushen.tdhbot.TDHBot
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkRequest
 import net.dankrushen.tdhbot.timedobject.TimedObject
 
 class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {

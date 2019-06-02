@@ -1,8 +1,8 @@
 package net.dankrushen.tdhbot.networking
 
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkMessage
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponse
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkMessage
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkRequest
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkResponse
 
 interface IClientControllerListener {
     fun onClientDisconnect(controller: ClientController)

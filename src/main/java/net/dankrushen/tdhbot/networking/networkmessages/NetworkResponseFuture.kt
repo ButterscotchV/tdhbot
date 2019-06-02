@@ -1,4 +1,4 @@
-package net.dankrushen.tdhbot.networking.networkmessage
+package net.dankrushen.tdhbot.networking.networkmessages
 
 import java.util.concurrent.CompletableFuture
 

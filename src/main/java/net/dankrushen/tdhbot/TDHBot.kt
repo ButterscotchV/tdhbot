@@ -9,9 +9,9 @@ import net.dankrushen.tdhbot.networking.ClientController
 import net.dankrushen.tdhbot.networking.IClientConnectListener
 import net.dankrushen.tdhbot.networking.IClientControllerListener
 import net.dankrushen.tdhbot.networking.SocketController
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkMessage
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponse
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkMessage
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkRequest
+import net.dankrushen.tdhbot.networking.networkmessages.NetworkResponse
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder

@@ -1,76 +1,58 @@
 package net.dankrushen.tdhbot.networking
 
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkMessage
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkRequest
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponse
-import net.dankrushen.tdhbot.networking.networkmessage.NetworkResponseFuture
+import net.dankrushen.tdhbot.networking.networkmessages.*
 import net.dankrushen.tdhbot.timedobject.TimedObject
 import net.dankrushen.tdhbot.timedobject.TimedObjectManager
-import java.io.OutputStream
 import java.net.Socket
+import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.CancellationException
 import java.util.concurrent.Executors
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
+import kotlin.concurrent.withLock
 
 class ClientController(val socket: Socket, var requestListener: IClientControllerListener) {
 
     private var listenerExecutor = Executors.newCachedThreadPool()
 
-    private val reader: Scanner = Scanner(socket.getInputStream())
-    private val writer: OutputStream = socket.getOutputStream()
+    private val writeLock = ReentrantLock()
+
+    private val inputStream = socket.getInputStream()
+    private val reader = Scanner(inputStream)
+    private val writer = socket.getOutputStream()
+
+    val intBuffer = ByteArray(4)
 
     val timedRequestManager = TimedObjectManager<NetworkRequest>()
 
-    private var networkId = 0
+    private var networkId = Int.MIN_VALUE
 
     private var clientThread = thread {
         while (!Thread.interrupted() && socket.isConnected) {
             try {
+                val id = inputStream.readInt(intBuffer)
+
+                val typeId = try {
+                    NetworkMessageType.fromId(inputStream.readInt(intBuffer))
+                } catch (illegalArgumentException: IllegalArgumentException) {
+                    println("Error in received message: Invalid message type ID")
+                    continue
+                }
+
                 val message = reader.nextLine()
 
-                if (!message.contains(':')) {
-                    println("Error in received message: Does not contain separator")
-                    continue
-                }
-
-                val splitMessage = message.split(Regex.fromLiteral(":"), 2)
-
-                if (splitMessage.size != 2) {
-                    println("Error in received message: Size does not match")
-                    continue
-                }
-
-                val id = splitMessage[0]
-
-                if (id.isBlank()) {
-                    println("Error in received message: id is blank")
-                    continue
-                }
-
-                val content = splitMessage[1]
-
-                if (id[0] == NetworkRequest.indicator) {
-                    if (id.length <= 1) {
-                        println("Error in received message: NetworkRequest id is blank")
-                        continue
+                when (typeId) {
+                    NetworkMessageType.MESSAGE -> listenerExecutor.submit {
+                        requestListener.onClientMessage(this, NetworkMessage(id, message))
                     }
 
-                    listenerExecutor.submit {
-                        sendMessage(requestListener.onClientRequest(this, NetworkRequest(id.substring(1), content)))
-                    }
-                } else if (id[0] == NetworkResponse.indicator) {
-                    if (id.length <= 1) {
-                        println("Error in received message: NetworkResponse id is blank")
-                        continue
+                    NetworkMessageType.REQUEST -> listenerExecutor.submit {
+                        sendMessage(requestListener.onClientRequest(this, NetworkRequest(id, message)))
                     }
 
-                    listenerExecutor.submit {
-                        requestListener.onClientResponse(this, NetworkResponse(id.substring(1), content))
-                    }
-                } else {
-                    listenerExecutor.submit {
-                        requestListener.onClientMessage(this, NetworkMessage(id, content))
+                    NetworkMessageType.RESPONSE -> listenerExecutor.submit {
+                        requestListener.onClientResponse(this, NetworkResponse(id, message))
                     }
                 }
             } catch (noSuchElementException: NoSuchElementException) {
@@ -89,16 +71,24 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
         listenerExecutor.shutdown()
     }
 
-    fun write(message: String) {
-        writer.write(("$message\n").toByteArray())
+    fun write(id: Int, message: String, type: NetworkMessageType = NetworkMessageType.MESSAGE) {
+        writeLock.withLock {
+            val buffer = ByteBuffer.allocate(Int.SIZE_BYTES * 2)
+
+            buffer.putInt(id)
+            buffer.putInt(type.id)
+
+            writer.write(buffer.array())
+            writer.write(("$message\n").toByteArray())
+        }
     }
 
     fun generateMessage(content: String): NetworkMessage {
-        return NetworkMessage(networkId++.toString(), content)
+        return NetworkMessage(networkId++, content)
     }
 
     fun sendMessage(message: NetworkMessage) {
-        write(message.toString())
+        write(message.id, message.content, message.messageType)
     }
 
     fun sendRequest(request: TimedObject<NetworkRequest>) {
@@ -124,7 +114,7 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
         }
     }
 
-    fun getRequest(id: String): TimedObject<NetworkRequest>? {
+    fun getRequest(id: Int): TimedObject<NetworkRequest>? {
         for (request in timedRequestManager.timedObjects) {
             if (request.obj.id == id)
                 return request
