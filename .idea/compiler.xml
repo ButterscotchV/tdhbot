@@ -9,8 +9,5 @@
         <module name="tdhbot" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="tdhbot" target="12" />
-    </bytecodeTargetLevel>
   </component>
 </project>
