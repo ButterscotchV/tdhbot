@@ -36,6 +36,8 @@ class TimedObject<T>(val obj: T, timeout: Long, timeoutUnit: TimeUnit, startDate
             field = value
         }
 
+    var finished: Boolean = false
+
     fun getTimeoutTime(timeUnit: TimeUnit = TimeUnit.SECONDS): Long {
         return timeUnit.convert(timeoutMillis, TimeUnit.MILLISECONDS)
     }

@@ -4,6 +4,7 @@ import net.dankrushen.tdhbot.networking.networkmessages.*
 import net.dankrushen.tdhbot.timedobject.TimedObject
 import net.dankrushen.tdhbot.timedobject.TimedObjectManager
 import java.net.Socket
+import java.net.SocketException
 import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.CancellationException
@@ -55,14 +56,20 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
                         requestListener.onClientResponse(this, NetworkResponse(id, message))
                     }
                 }
+            } catch (socketException: SocketException) {
+                onDisconnect()
             } catch (noSuchElementException: NoSuchElementException) {
-                close()
-                requestListener.onClientDisconnect(this)
+                onDisconnect()
             } catch (e: Exception) {
                 println("Error in ClientController:")
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun onDisconnect() {
+        close()
+        requestListener.onClientDisconnect(this)
     }
 
     fun close() {
@@ -92,7 +99,9 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
     }
 
     fun sendRequest(request: TimedObject<NetworkRequest>) {
-        timedRequestManager.timedObjects += request
+        synchronized(timedRequestManager.timedObjects) {
+            timedRequestManager.timedObjects += request
+        }
 
         sendMessage(request.obj)
     }
@@ -115,9 +124,11 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
     }
 
     fun getRequest(id: Int): TimedObject<NetworkRequest>? {
-        for (request in timedRequestManager.timedObjects) {
-            if (request.obj.id == id)
-                return request
+        synchronized(timedRequestManager.timedObjects) {
+            for (request in timedRequestManager.timedObjects) {
+                if (request.obj.id == id)
+                    return request
+            }
         }
 
         return null

@@ -35,7 +35,9 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
                 for (i in timedObjects.size - 1 downTo 0) {
                     val timedObject = timedObjects[i]
 
-                    if (timedObject.isExpired()) {
+                    if (timedObject.finished) {
+                        finishTimedObject(i)
+                    } else if (timedObject.isExpired()) {
                         timedObjects.removeAt(i)
 
                         timedObject.onExpire?.invoke(timedObject)
@@ -53,17 +55,28 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
         checkThread.interrupt()
     }
 
-    fun finishTimedObject(timedObject: TimedObject<T>, executeOnFinish: Boolean = true): TimedObject<T>? {
+    fun finishTimedObject(timedObjectIndex: Int, executeOnFinish: Boolean = true): TimedObject<T>? {
+        var timedObject: TimedObject<T>
+
         synchronized(timedObjects) {
-            if (!timedObjects.contains(timedObject))
+            if (timedObjectIndex < 0 || timedObjectIndex >= timedObjects.size)
                 return null
 
-            timedObjects.remove(timedObject)
+            timedObject = timedObjects[timedObjectIndex]
+            timedObjects.removeAt(timedObjectIndex)
         }
 
         if (executeOnFinish)
             timedObject.onFinish?.invoke(timedObject)
 
         return timedObject
+    }
+
+    fun finishTimedObject(timedObject: TimedObject<T>, executeOnFinish: Boolean = true): TimedObject<T>? {
+        synchronized(timedObjects) {
+            val timedObjectIndex = timedObjects.indexOf(timedObject)
+
+            return finishTimedObject(timedObjectIndex, executeOnFinish)
+        }
     }
 }
