@@ -18,14 +18,18 @@ import net.dv8tion.jda.core.JDABuilder
 import java.net.Socket
 import java.nio.file.Paths
 
-fun main() {
-    BotUtils.tokenFile.createNewFile()
-
-    val tdhBot = TDHBot(BotUtils.tokenFile.readText())
-    tdhBot.execute()
-}
-
 class TDHBot : IClientConnectListener, IClientControllerListener {
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            BotUtils.tokenFile.createNewFile()
+
+            val tdhBot = TDHBot(BotUtils.tokenFile.readText())
+            tdhBot.execute()
+        }
+    }
+
     val defaultPort = 41242
     var socketController: SocketController = SocketController(this)
 
