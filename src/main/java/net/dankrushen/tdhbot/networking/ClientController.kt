@@ -115,12 +115,16 @@ class ClientController(val socket: Socket, var requestListener: IClientControlle
         return future
     }
 
-    fun sendRequestBlocking(request: TimedObject<NetworkRequest>): NetworkResponse? {
+    fun waitOnRequest(requestWaitable: NetworkResponseFuture): NetworkResponse? {
         return try {
-            sendRequestWaitable(request).get()
+            requestWaitable.get()
         } catch (cancelledException: CancellationException) {
             null
         }
+    }
+
+    fun sendRequestBlocking(request: TimedObject<NetworkRequest>): NetworkResponse? {
+        return waitOnRequest(sendRequestWaitable(request))
     }
 
     fun getRequest(id: Int): TimedObject<NetworkRequest>? {
