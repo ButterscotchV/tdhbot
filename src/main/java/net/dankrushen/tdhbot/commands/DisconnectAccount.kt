@@ -16,7 +16,7 @@ class DisconnectAccount(tdhBot: TDHBot) : BaseCommand(tdhBot) {
 
         this.setCommand { cmdEvent, args ->
             ThreadLocalStoreContainer.transactional(tdhBot.tdhDatabase.xodusStore) {
-                val user = tdhBot.tdhDatabase.getUserDiscordOrSteam(cmdEvent.author.id)
+                val user = tdhBot.tdhDatabase.getUserDiscordOrSteam(discordId = cmdEvent.author.id)
 
                 if (user != null) {
                     user.delete()

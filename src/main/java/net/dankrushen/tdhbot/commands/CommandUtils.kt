@@ -34,7 +34,7 @@ object CommandUtils {
                 }
 
                 // If the character is escaped or the character that's escaped is an escape character then check if it matches
-                if ((!escaped || (escaped && stringChar == escapeChar)) && stringChar == char) {
+                if ((!escaped || stringChar == escapeChar) && stringChar == char) {
                     return i
                 }
 
