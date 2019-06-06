@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit
 object BotUtils {
     val tokenFile = File("token.txt")
 
+    const val targetGuildId = "433794474288873472"
+
     const val processingEmoji = "⚙"
 
     const val successEmoji = "✅"

@@ -115,7 +115,7 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
         if (args.size >= 3) {
             val command = args[0]
             val steamId = args[1]
-            val console = args[2]
+            val source = args[2]
 
             when (command.toUpperCase()) {
                 "CONNECT" -> {
@@ -186,6 +186,39 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
                         } else {
                             sendConsoleMessage(controller, steamId, "Your account could not be found.")
                         }
+                    }
+                }
+
+                "GETDISCORDROLES" -> {
+                    ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore) {
+                        val user = tdhDatabase.getUserDiscordOrSteam(steamId = steamId)
+                        val roles = mutableListOf<String>()
+
+                        if (user != null) {
+                            val discordMember = client?.getGuildById(BotUtils.targetGuildId)?.getMemberById(user.discordId)
+
+                            if (discordMember != null) {
+                                for (role in discordMember.roles) {
+                                    roles.add(role.id)
+                                }
+
+                                user.setRoles(roles.toTypedArray())
+                            } else {
+                                println("Unable to fetch member \"$steamId\"...")
+
+                                roles.addAll(user.getRoles())
+                            }
+                        }
+
+                        response = roles.joinToString(",")
+                    }
+                }
+
+                "GETCUSTOMTAG" -> {
+                    ThreadLocalStoreContainer.transactional(tdhDatabase.xodusStore, readonly = true) {
+                        val user = tdhDatabase.getUserDiscordOrSteam(steamId = steamId)
+
+                        response = user?.customTag ?: ""
                     }
                 }
             }
