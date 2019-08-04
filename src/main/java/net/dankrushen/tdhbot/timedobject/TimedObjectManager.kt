@@ -31,17 +31,21 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
                 // Ignore interrupt error
             }
 
-            synchronized(timedObjects) {
-                for (i in timedObjects.size - 1 downTo 0) {
-                    val timedObject = timedObjects[i]
+            checkAndExpireObjects()
+        }
+    }
 
-                    if (timedObject.finished) {
-                        finishTimedObject(i)
-                    } else if (timedObject.isExpired()) {
-                        timedObjects.removeAt(i)
+    fun checkAndExpireObjects() {
+        synchronized(timedObjects) {
+            for (i in timedObjects.size - 1 downTo 0) {
+                val timedObject = timedObjects[i]
 
-                        timedObject.onExpire?.invoke(timedObject)
-                    }
+                if (timedObject.finished) {
+                    finishTimedObject(i)
+                } else if (timedObject.isExpired()) {
+                    timedObjects.removeAt(i)
+
+                    timedObject.onExpire?.invoke(timedObject)
                 }
             }
         }
@@ -53,6 +57,7 @@ class TimedObjectManager<T>(checkDelay: Long = 1, checkUnit: TimeUnit = TimeUnit
 
     fun shutdown() {
         checkThread.interrupt()
+        checkAndExpireObjects()
     }
 
     fun finishTimedObject(timedObjectIndex: Int, executeOnFinish: Boolean = true): TimedObject<T>? {

@@ -239,7 +239,7 @@ class TDHBot : IClientConnectListener, IClientControllerListener {
 
     fun sendClientRequest(controller: ClientController, message: String): NetworkResponse? {
         try {
-            return controller.sendRequestBlocking(TimedObject(NetworkRequest(controller.generateMessage(message)), BotUtils.networkRequestTimeout, BotUtils.networkRequestTimeoutUnit))
+            return controller.sendRequestBlocking(TimedObject(controller.generateRequest(message), BotUtils.networkRequestTimeout, BotUtils.networkRequestTimeoutUnit))
         } catch (socketException: SocketException) {
         }
 

@@ -2,7 +2,6 @@ package net.dankrushen.tdhbot.commands
 
 import net.dankrushen.tdhbot.BotUtils
 import net.dankrushen.tdhbot.TDHBot
-import net.dankrushen.tdhbot.networking.networkmessages.NetworkRequest
 import net.dankrushen.tdhbot.timedobject.TimedObject
 
 class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
@@ -34,7 +33,7 @@ class SocketSend(tdhBot: TDHBot) : BaseCommand(tdhBot) {
                 cmdEvent.reply("Sending request to client #${i + 1}...")
                 val client = tdhBot.clients[i]
 
-                val response = client.sendRequestBlocking(TimedObject(NetworkRequest(client.generateMessage(args.joinToString(" "))), BotUtils.networkRequestTimeout, BotUtils.networkRequestTimeoutUnit))
+                val response = client.sendRequestBlocking(TimedObject(client.generateRequest(args.joinToString(" ")), BotUtils.networkRequestTimeout, BotUtils.networkRequestTimeoutUnit))
 
                 if (response != null)
                     cmdEvent.reply("Response #${i + 1} (${response.id}): ${response.content}")
